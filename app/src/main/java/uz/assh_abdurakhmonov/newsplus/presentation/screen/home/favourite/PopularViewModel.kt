@@ -13,7 +13,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class PopularViewModel @Inject constructor(
-    private val repository: uz.abdurakhmonov.domain.repository.NewsRepository,
+    private val repository: NewsRepository,
     private val direction: PopularContract.Direction
 ):ViewModel(),PopularContract.ViewModel{
     init {

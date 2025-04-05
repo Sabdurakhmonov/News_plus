@@ -1,7 +1,5 @@
 package uz.assh_abdurakhmonov.newsplus.presentation.ui.component
 
-import android.media.Image
-import android.text.TextUtils.substring
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -45,11 +43,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import coil.ImageLoader
-import coil.compose.AsyncImagePainter.State.Empty.painter
 import coil.compose.rememberAsyncImagePainter
 import uz.assh_abdurakhmonov.newsplus.R
-import uz.abdurakhmonov.data.remote.network.response.Articles
+import uz.abdurakhmonov.domain.model.NewsData
 import uz.assh_abdurakhmonov.newsplus.presentation.ui.theme.Color
 import uz.assh_abdurakhmonov.newsplus.presentation.ui.theme.inter
 import uz.assh_abdurakhmonov.newsplus.presentation.ui.theme.lato
@@ -234,7 +230,7 @@ fun NotificationItem() {
 
 
 @Composable
-fun HotNewsItem(data: uz.abdurakhmonov.data.remote.network.response.Articles, listener: (uz.abdurakhmonov.data.remote.network.response.Articles) -> Unit) {
+fun HotNewsItem(data: NewsData, listener: (NewsData) -> Unit) {
     Column(
         modifier = Modifier
             .padding(horizontal = 16.dp)
@@ -272,7 +268,7 @@ fun HotNewsItem(data: uz.abdurakhmonov.data.remote.network.response.Articles, li
                     .padding(top = 2.dp)
             ) {
                 Text(
-                    text = data.source?.name?:data.title?: "",
+                    text = data.title?: "",
                     fontFamily = inter,
                     fontSize = 14.sp,
                     fontWeight = FontWeight.Normal,
@@ -320,7 +316,7 @@ fun HotNewsItem(data: uz.abdurakhmonov.data.remote.network.response.Articles, li
 }
 
 @Composable
-fun PopularItem(data: uz.abdurakhmonov.data.remote.network.response.Articles, listener: (uz.abdurakhmonov.data.remote.network.response.Articles) -> Unit) {
+fun PopularItem(data: NewsData, listener: (NewsData) -> Unit) {
     Row(
         modifier = Modifier
             .padding(horizontal = 16.dp)
@@ -364,7 +360,7 @@ fun PopularItem(data: uz.abdurakhmonov.data.remote.network.response.Articles, li
             ) {
                 Text(
                     text = data.author
-                        ?: (data.source?.name?: ""),
+                        ?: (data.sourceName?: ""),
                     fontWeight = FontWeight.Normal,
                     fontFamily = inter,
                     fontSize = 14.sp,
@@ -389,7 +385,7 @@ fun PopularItem(data: uz.abdurakhmonov.data.remote.network.response.Articles, li
 }
 
 @Composable
-fun NewsItem(data: uz.abdurakhmonov.data.remote.network.response.Articles, listener: (uz.abdurakhmonov.data.remote.network.response.Articles) -> Unit) {
+fun NewsItem(data: NewsData, listener: (NewsData) -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -420,9 +416,8 @@ fun NewsItem(data: uz.abdurakhmonov.data.remote.network.response.Articles, liste
                     .padding(16.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                if (data.author != null) {
                     Text(
-                        text = data.author,
+                        text = data.sourceName?:data.sourceName?:"",
                         fontSize = 13.sp,
                         color = Color.primary,
                         modifier = Modifier
@@ -433,20 +428,6 @@ fun NewsItem(data: uz.abdurakhmonov.data.remote.network.response.Articles, liste
                             .padding(8.dp),
                         maxLines = 1
                     )
-                } else if (data.source != null) {
-                    Text(
-                        text = data.source.name?:"",
-                        fontSize = 13.sp,
-                        color = Color.primary,
-                        modifier = Modifier
-                            .background(
-                                Color.bgItemText,
-                                shape = RoundedCornerShape(6.dp)
-                            )
-                            .padding(8.dp),
-                        maxLines = 1
-                    )
-                }
             }
 
         }
@@ -490,7 +471,7 @@ fun TabItem(select: Boolean, index: Int, data: String, click: (String, Int) -> U
 }
 
 @Composable
-fun NewsItems(data: uz.abdurakhmonov.data.remote.network.response.Articles, listener: (uz.abdurakhmonov.data.remote.network.response.Articles) -> Unit) {
+fun NewsItems(data: NewsData, listener: (NewsData) -> Unit) {
     Row(
         modifier = Modifier
             .padding(horizontal = 16.dp)

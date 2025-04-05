@@ -8,8 +8,10 @@ import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.withContext
 import uz.abdurakhmonov.data.remote.local.room.NewsDao
 import uz.abdurakhmonov.data.remote.local.shared.SharedHelper
-import uz.abdurakhmonov.data.remote.network.response.Articles
 import uz.abdurakhmonov.data.remote.network.response.NewsType
+import uz.abdurakhmonov.data.utils.toData
+import uz.abdurakhmonov.data.utils.toDomain
+import uz.abdurakhmonov.domain.model.NewsData
 import uz.abdurakhmonov.domain.repository.NewsRepository
 import javax.inject.Inject
 
@@ -19,63 +21,72 @@ class NewsRepositoryImpl @Inject constructor(
     private val dao: NewsDao
 ) : NewsRepository {
 
-    override fun getAllNews(): Flow<Result<Pair<List<Articles>, List<Articles>>>> = flow {
+    override fun getAllNews(): Flow<Result<Pair<List<NewsData>, List<NewsData>>>> = flow {
         val res1 = api.getAllNews(local.getKey())
         val res2 = api.getAllHotNews(local.getKey())
-        if(res2.isSuccessful&&res1.isSuccessful){
-            emit(Result.success(Pair(res1.body()!!.articles,res2.body()!!.articles)))
+        if (res2.isSuccessful && res1.isSuccessful) {
+            emit(
+                Result.success(
+                    Pair(
+                        res1.body()!!.articles.map { it.toData().toDomain() },
+                        res2.body()!!.articles.map { it.toData().toDomain() })
+                )
+            )
         }
     }.catch { emit(Result.failure(it)) }.flowOn(Dispatchers.IO)
 
 
-    override fun getNewsByCategory(category: String): Flow<Result<List<Articles>>> = flow {
-        val result = api.getNewsByCategory(local.getKey(),category)
-        if(result.body()!=null&&result.isSuccessful){
-            emit(Result.success(result.body()!!.articles))
+    override fun getNewsByCategory(category: String): Flow<Result<List<NewsData>>> = flow {
+        val result = api.getNewsByCategory(local.getKey(), category)
+        if (result.body() != null && result.isSuccessful) {
+            emit(Result.success(result.body()!!.articles.map { it.toData().toDomain() }))
         }
     }.catch { emit(Result.failure(it)) }.flowOn(Dispatchers.IO)
 
-    override fun getAllHotNews(): Flow<Result<List<Articles>>> = flow {
+    override fun getAllHotNews(): Flow<Result<List<NewsData>>> = flow {
         val result = api.getAllHotNews(local.getKey())
-        if(result.isSuccessful&&result.body()!=null){
-            emit(Result.success(result.body()!!.articles))
+        if (result.isSuccessful && result.body() != null) {
+            emit(Result.success(result.body()!!.articles.map { it.toData().toDomain() }))
         }
 
     }.catch { emit(Result.failure(it)) }.flowOn(Dispatchers.IO)
 
-    override fun getNewsByQuery(query: String): Flow<Result<List<Articles>>> = flow {
-        val result = api.searchByQuery(local.getKey(),query)
-        if(result.isSuccessful&&result.body()!=null){
-            emit(Result.success(result.body()!!.articles))
+    override fun getNewsByQuery(query: String): Flow<Result<List<NewsData>>> = flow {
+        val result = api.searchByQuery(local.getKey(), query)
+        if (result.isSuccessful && result.body() != null) {
+            emit(Result.success(result.body()!!.articles.map { it.toData().toDomain() }))
         }
     }.catch { emit(Result.failure(it)) }.flowOn(Dispatchers.IO)
 
-    override fun getPopularNews(): Flow<Result<List<Articles>>> = flow {
+    override fun getPopularNews(): Flow<Result<List<NewsData>>> = flow {
 
         val result = api.getPopularNews(local.getKey())
-        if(result.isSuccessful&&result.body()!=null){
-            emit(Result.success(result.body()!!.articles))
+        if (result.isSuccessful && result.body() != null) {
+            emit(Result.success(result.body()!!.articles.map { it.toData().toDomain() }))
         }
     }.catch { emit(Result.failure(it)) }.flowOn(Dispatchers.IO)
-
 
 
     //init news
-    override suspend fun initDataAll() = withContext(Dispatchers.IO){
+    override suspend fun initDataAll() = withContext(Dispatchers.IO) {
         val result = api.getAllHotNews(local.getKey())
         if (result.isSuccessful && result.body() != null) {
-            dao.addData(result.body()!!.articles.map { it.toLocal().copy(type = NewsType.ALL.value) })
+            dao.addData(result.body()!!.articles.map {
+                it.toData().copy(type = NewsType.ALL.value)
+            })
         }
     }
 
-    override suspend fun initDataHots() = withContext(Dispatchers.IO){
+    override suspend fun initDataHots() = withContext(Dispatchers.IO) {
         val result = api.getAllHotNews(local.getKey())
         if (result.isSuccessful && result.body() != null) {
-            dao.addData(result.body()!!.articles.map { it.toLocal().copy(type = NewsType.HOT.value) })
+            dao.addData(result.body()!!.articles.map {
+                it.toData().copy(type = NewsType.HOT.value)
+            })
         }
     }
 
-    override suspend fun initDataByCategory() = withContext(Dispatchers.IO){
+    override suspend fun initDataByCategory() = withContext(Dispatchers.IO) {
         val tabList = listOf(
             "business",
             "entertainment",
@@ -89,7 +100,7 @@ class NewsRepositoryImpl @Inject constructor(
             val result = api.getNewsByCategory(local.getKey(), category)
             if (result.isSuccessful && result.body() != null) {
                 dao.addData(result.body()!!.articles.map {
-                    it.toLocal().copy(type = NewsType.ALL.value, category = category)
+                    it.toData().copy(type = NewsType.ALL.value, category = category)
                 })
 
             }
@@ -100,7 +111,7 @@ class NewsRepositoryImpl @Inject constructor(
         val result = api.getPopularNews(local.getKey())
         if (result.isSuccessful && result.body() != null) {
             dao.addData(result.body()!!.articles.map {
-                it.toLocal().copy(type = NewsType.POPULAR.value)
+                it.toData().copy(type = NewsType.POPULAR.value)
             })
         }
     }

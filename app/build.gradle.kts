@@ -97,4 +97,7 @@ dependencies {
     //permission
     implementation ("com.google.accompanist:accompanist-permissions:0.36.0")
 
+    //domain
+    implementation(project(":domain"))
+
 }
