@@ -9,12 +9,12 @@ import org.orbitmvi.orbit.syntax.simple.intent
 import org.orbitmvi.orbit.syntax.simple.reduce
 import org.orbitmvi.orbit.viewmodel.container
 import uz.assh_abdurakhmonov.newsplus.data.CategoryData
-import uz.assh_abdurakhmonov.newsplus.domian.repository.MenuRepository
+import uz.abdurakhmonov.domain.repository.NewsRepository
 import javax.inject.Inject
 
 @HiltViewModel
 class MenuViewModel @Inject constructor(
-    private val repository: MenuRepository,
+    private val repository: uz.abdurakhmonov.domain.repository.NewsRepository,
     private val direction: MenuContract.Direction
 ):ViewModel(),MenuContract.ViewModel {
 
@@ -26,7 +26,6 @@ class MenuViewModel @Inject constructor(
 
             }
         }.launchIn(viewModelScope)
-
     }
 
     override fun onEventDispatchers(intent: MenuContract.Intent) = intent {
@@ -50,7 +49,7 @@ class MenuViewModel @Inject constructor(
 
             }
             is MenuContract.Intent.ClickItem->{
-                direction.nextToInfo(intent.data)
+                direction.nextToInfo(intent.data.url?:"")
             }
             is MenuContract.Intent.ClickSeeMore->{
 

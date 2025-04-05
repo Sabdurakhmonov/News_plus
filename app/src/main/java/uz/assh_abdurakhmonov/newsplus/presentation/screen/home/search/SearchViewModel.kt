@@ -8,18 +8,18 @@ import kotlinx.coroutines.flow.onEach
 import org.orbitmvi.orbit.syntax.simple.intent
 import org.orbitmvi.orbit.syntax.simple.reduce
 import org.orbitmvi.orbit.viewmodel.container
-import uz.assh_abdurakhmonov.newsplus.domian.repository.MenuRepository
+import uz.abdurakhmonov.domain.repository.NewsRepository
 import javax.inject.Inject
 
 @HiltViewModel
 class SearchViewModel @Inject constructor(
-    private val repository: MenuRepository,
+    private val repository: uz.abdurakhmonov.domain.repository.NewsRepository,
     private val direction: SearchContract.Direction
 ):ViewModel(),SearchContract.ViewModel {
     override fun onEventDispatcher(intent: SearchContract.Intent) = intent {
         when(intent){
             is SearchContract.Intent.ClickItem->{
-                direction.nextToInfo(intent.data)
+                direction.nextToInfo(intent.data.url?:"")
             }
             is SearchContract.Intent.ClickSearch->{
                 repository.getNewsByQuery(intent.query).onEach {

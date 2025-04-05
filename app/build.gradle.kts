@@ -91,26 +91,10 @@ dependencies {
     implementation("org.orbit-mvi:orbit-viewmodel:4.6.1")
     implementation("org.orbit-mvi:orbit-compose:4.6.1")
 
-    //RETROFIT
-    implementation("com.squareup.retrofit2:retrofit:2.9.0")
-    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
-    implementation("com.jakewharton.retrofit:retrofit2-kotlin-coroutines-adapter:0.9.2")
-
-    //Chuck
-    debugImplementation("com.github.chuckerteam.chucker:library:4.0.0")
-    releaseImplementation("com.github.chuckerteam.chucker:library-no-op:3.5.2")
-
     //coil
     implementation("io.coil-kt:coil-compose:2.3.0")
 
-    //worker
-    val work_version = "2.9.1"
-    implementation("androidx.work:work-runtime-ktx:$work_version")
-
-    //room
-    val room_version = "2.6.1"
-    implementation("androidx.room:room-runtime:$room_version")
-    kapt("androidx.room:room-compiler:$room_version")
-    implementation("androidx.room:room-ktx:$room_version")
+    //permission
+    implementation ("com.google.accompanist:accompanist-permissions:0.36.0")
 
 }

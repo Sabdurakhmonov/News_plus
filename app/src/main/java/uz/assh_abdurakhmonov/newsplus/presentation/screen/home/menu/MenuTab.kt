@@ -6,8 +6,6 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.MutatePriority
 import androidx.compose.foundation.border
-import androidx.compose.foundation.gestures.ScrollScope
-import androidx.compose.foundation.gestures.ScrollableState
 import androidx.compose.foundation.interaction.collectIsDraggedAsState
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -28,9 +26,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.List
 import androidx.compose.material.icons.outlined.KeyboardArrowRight
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -42,9 +37,6 @@ import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.saveable.Saver
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -68,7 +60,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.yield
 import org.orbitmvi.orbit.compose.collectAsState
 import uz.assh_abdurakhmonov.newsplus.R
-import uz.assh_abdurakhmonov.newsplus.remote.network.response.Articles
+import uz.abdurakhmonov.data.remote.network.response.LocalData
 import uz.assh_abdurakhmonov.newsplus.presentation.ui.component.HotNewsShimmer
 import uz.assh_abdurakhmonov.newsplus.presentation.ui.component.MenuAllShimmer
 import uz.assh_abdurakhmonov.newsplus.presentation.ui.component.MenuHotShimmer
@@ -78,6 +70,7 @@ import uz.assh_abdurakhmonov.newsplus.presentation.ui.component.TabItem
 import uz.assh_abdurakhmonov.newsplus.presentation.ui.theme.Color
 import uz.assh_abdurakhmonov.newsplus.presentation.ui.theme.inter
 import uz.assh_abdurakhmonov.newsplus.presentation.ui.theme.lato
+import uz.abdurakhmonov.data.remote.network.response.Articles
 
 object MenuTab : Tab {
     private fun readResolve(): Any = MenuTab
@@ -200,7 +193,9 @@ fun MenuTabContent(
                 if (uiState.value.hotNewsList.isNotEmpty()) {
                     AwesomeCarousel(
                         uiState = uiState,
-                        listener = {intent.invoke(MenuContract.Intent.ClickItem(it))}
+                        listener = {
+                            intent.invoke(MenuContract.Intent.ClickItem(it))
+                        }
                     )
                 } else {
                     MenuHotShimmer()
@@ -238,7 +233,6 @@ fun MenuTabContent(
                             data = uiState.value.allNewsList[it],
                             listener = {intent.invoke(MenuContract.Intent.ClickItem(it))}
                         )
-
                     }
                 }
             } else {
@@ -259,7 +253,7 @@ fun AwesomeCarousel(
     pageCount: Int = 10,
     pagerState: PagerState = rememberPagerState(pageCount = { 10 }),
     autoScrollDuration: Long = 3000L,
-    listener:(Articles)->Unit
+    listener:(uz.abdurakhmonov.data.remote.network.response.Articles)->Unit
 ) {
     val isDragged by pagerState.interactionSource.collectIsDraggedAsState()
     if (isDragged.not()) {

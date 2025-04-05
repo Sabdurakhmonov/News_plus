@@ -12,8 +12,8 @@ import cafe.adriel.voyager.core.screen.Screen
 
 
 import cafe.adriel.voyager.hilt.getViewModel
-import uz.assh_abdurakhmonov.newsplus.remote.network.response.Articles
-data class PostScreen(val data: Articles) : Screen {
+import uz.abdurakhmonov.data.remote.network.response.Articles
+data class PostScreen(val data: String) : Screen {
 
     @Composable
     override fun Content() {
@@ -26,11 +26,11 @@ data class PostScreen(val data: Articles) : Screen {
 
 @Composable
 fun PostScreenContent(
-    data:Articles,
+    data:String,
     intent:(PostContract.Intent)->Unit
 ) {
     Box(modifier = Modifier.fillMaxSize()) {
-        WebViewPage(url = data.url?:"")
+        WebViewPage(url = data?:"")
     }
 }
 

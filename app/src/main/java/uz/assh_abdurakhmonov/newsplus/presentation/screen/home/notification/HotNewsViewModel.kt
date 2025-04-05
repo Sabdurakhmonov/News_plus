@@ -8,12 +8,12 @@ import kotlinx.coroutines.flow.onEach
 import org.orbitmvi.orbit.syntax.simple.intent
 import org.orbitmvi.orbit.syntax.simple.reduce
 import org.orbitmvi.orbit.viewmodel.container
-import uz.assh_abdurakhmonov.newsplus.domian.repository.MenuRepository
+import uz.abdurakhmonov.domain.repository.NewsRepository
 import javax.inject.Inject
 
 @HiltViewModel
 class HotNewsViewModel @Inject constructor(
-    private val repository: MenuRepository,
+    private val repository: uz.abdurakhmonov.domain.repository.NewsRepository,
     private val direction: HotNewsContract.Direction
 ):ViewModel(),HotNewsContract.ViewModel {
     init {
@@ -28,7 +28,7 @@ class HotNewsViewModel @Inject constructor(
     override fun onEventDispatcher(intent: HotNewsContract.Intent) = intent {
         when(intent){
             is HotNewsContract.Intent.ClickItem->{
-                direction.nextToInfo(intent.data)
+                direction.nextToInfo(intent.data.url?:"")
             }
         }
     }

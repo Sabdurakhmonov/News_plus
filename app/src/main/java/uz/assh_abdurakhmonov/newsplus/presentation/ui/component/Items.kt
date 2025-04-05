@@ -24,8 +24,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.MoreVert
+
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -50,8 +49,7 @@ import coil.ImageLoader
 import coil.compose.AsyncImagePainter.State.Empty.painter
 import coil.compose.rememberAsyncImagePainter
 import uz.assh_abdurakhmonov.newsplus.R
-import uz.assh_abdurakhmonov.newsplus.remote.network.response.Articles
-import uz.assh_abdurakhmonov.newsplus.screen.home.notification.HotNewsTab
+import uz.abdurakhmonov.data.remote.network.response.Articles
 import uz.assh_abdurakhmonov.newsplus.presentation.ui.theme.Color
 import uz.assh_abdurakhmonov.newsplus.presentation.ui.theme.inter
 import uz.assh_abdurakhmonov.newsplus.presentation.ui.theme.lato
@@ -236,7 +234,7 @@ fun NotificationItem() {
 
 
 @Composable
-fun HotNewsItem(data: Articles, listener: (Articles) -> Unit) {
+fun HotNewsItem(data: uz.abdurakhmonov.data.remote.network.response.Articles, listener: (uz.abdurakhmonov.data.remote.network.response.Articles) -> Unit) {
     Column(
         modifier = Modifier
             .padding(horizontal = 16.dp)
@@ -274,7 +272,7 @@ fun HotNewsItem(data: Articles, listener: (Articles) -> Unit) {
                     .padding(top = 2.dp)
             ) {
                 Text(
-                    text = data.source?.name ?: "",
+                    text = data.source?.name?:data.title?: "",
                     fontFamily = inter,
                     fontSize = 14.sp,
                     fontWeight = FontWeight.Normal,
@@ -322,7 +320,7 @@ fun HotNewsItem(data: Articles, listener: (Articles) -> Unit) {
 }
 
 @Composable
-fun PopularItem(data: Articles, listener: (Articles) -> Unit) {
+fun PopularItem(data: uz.abdurakhmonov.data.remote.network.response.Articles, listener: (uz.abdurakhmonov.data.remote.network.response.Articles) -> Unit) {
     Row(
         modifier = Modifier
             .padding(horizontal = 16.dp)
@@ -366,9 +364,7 @@ fun PopularItem(data: Articles, listener: (Articles) -> Unit) {
             ) {
                 Text(
                     text = data.author
-                        ?: if (data.source?.name != null) {
-                            data.source.name
-                        } else "",
+                        ?: (data.source?.name?: ""),
                     fontWeight = FontWeight.Normal,
                     fontFamily = inter,
                     fontSize = 14.sp,
@@ -393,7 +389,7 @@ fun PopularItem(data: Articles, listener: (Articles) -> Unit) {
 }
 
 @Composable
-fun NewsItem(data: Articles, listener: (Articles) -> Unit) {
+fun NewsItem(data: uz.abdurakhmonov.data.remote.network.response.Articles, listener: (uz.abdurakhmonov.data.remote.network.response.Articles) -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -437,9 +433,9 @@ fun NewsItem(data: Articles, listener: (Articles) -> Unit) {
                             .padding(8.dp),
                         maxLines = 1
                     )
-                } else if (data.source?.name != null) {
+                } else if (data.source != null) {
                     Text(
-                        text = data.source.name,
+                        text = data.source.name?:"",
                         fontSize = 13.sp,
                         color = Color.primary,
                         modifier = Modifier
@@ -494,7 +490,7 @@ fun TabItem(select: Boolean, index: Int, data: String, click: (String, Int) -> U
 }
 
 @Composable
-fun NewsItems(data: Articles, listener: (Articles) -> Unit) {
+fun NewsItems(data: uz.abdurakhmonov.data.remote.network.response.Articles, listener: (uz.abdurakhmonov.data.remote.network.response.Articles) -> Unit) {
     Row(
         modifier = Modifier
             .padding(horizontal = 16.dp)

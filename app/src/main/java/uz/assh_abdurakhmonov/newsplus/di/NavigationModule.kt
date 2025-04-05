@@ -13,6 +13,7 @@ import uz.assh_abdurakhmonov.newsplus.navigation.NavigationHandler
 interface NavigationModule {
     @Binds
     fun bindAppNavigator(dispatcher: AppNavigationDispatcher): AppNavigator
+
     @Binds
     fun bindNavigationHandler(dispatcher: AppNavigationDispatcher): NavigationHandler
 }
