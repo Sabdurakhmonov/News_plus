@@ -69,15 +69,13 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
-    //coil
-    implementation("io.coil-kt:coil-compose:2.3.0")
     //shimmer
-    implementation("com.valentinilk.shimmer:compose-shimmer:1.3.1")
+    implementation(libs.compose.shimmer)
 
     //hilt
-    implementation("com.google.dagger:hilt-android:2.51")
-    kapt("com.google.dagger:hilt-compiler:2.51")
-    implementation("androidx.hilt:hilt-work:1.0.0")
+    implementation(libs.hilt.android)
+    kapt(libs.hilt.compiler)
+    implementation(libs.androidx.hilt.work)
 
     //voyager
     implementation(libs.voyager.navigator)
@@ -88,14 +86,14 @@ dependencies {
 
 
     // MVI orbit
-    implementation("org.orbit-mvi:orbit-viewmodel:4.6.1")
-    implementation("org.orbit-mvi:orbit-compose:4.6.1")
+    implementation(libs.orbit.viewmodel)
+    implementation(libs.orbit.compose)
 
     //coil
-    implementation("io.coil-kt:coil-compose:2.3.0")
+    implementation(libs.coil.kt.coil.compose)
 
     //permission
-    implementation ("com.google.accompanist:accompanist-permissions:0.36.0")
+    implementation (libs.accompanist.permissions)
 
     //domain
     implementation(project(":domain"))

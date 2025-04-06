@@ -8,6 +8,8 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import uz.abdurakhmonov.data.remote.local.room.NewsDao
+import uz.abdurakhmonov.data.remote.local.room.NewsDataBase
 import javax.inject.Singleton
 
 @Module
@@ -15,12 +17,12 @@ import javax.inject.Singleton
 class LocalModule {
     @[Provides Singleton]
     fun providesShared(@ApplicationContext context: Context): SharedPreferences =
-        context.getSharedPreferences("myData", Context.MODE_PRIVATE)
+        context.getSharedPreferences("news_data", Context.MODE_PRIVATE)
 
     @[Provides Singleton]
-    fun providesNewsDatabase(@ApplicationContext context: Context): uz.abdurakhmonov.data.remote.local.room.NewsDataBase =
-        Room.databaseBuilder(context, uz.abdurakhmonov.data.remote.local.room.NewsDataBase::class.java, "news").build()
+    fun providesNewsDatabase(@ApplicationContext context: Context): NewsDataBase =
+        Room.databaseBuilder(context, NewsDataBase::class.java, "news").build()
 
     @[Provides Singleton]
-    fun providesNewsDao(dataBase: uz.abdurakhmonov.data.remote.local.room.NewsDataBase): uz.abdurakhmonov.data.remote.local.room.NewsDao = dataBase.dao()
+    fun providesNewsDao(dataBase: NewsDataBase): NewsDao = dataBase.dao()
 }

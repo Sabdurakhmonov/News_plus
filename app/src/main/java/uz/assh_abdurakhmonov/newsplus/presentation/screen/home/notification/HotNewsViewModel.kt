@@ -8,7 +8,6 @@ import kotlinx.coroutines.flow.onEach
 import org.orbitmvi.orbit.syntax.simple.intent
 import org.orbitmvi.orbit.syntax.simple.reduce
 import org.orbitmvi.orbit.viewmodel.container
-import uz.abdurakhmonov.domain.repository.NewsRepository
 import javax.inject.Inject
 
 @HiltViewModel
@@ -17,7 +16,7 @@ class HotNewsViewModel @Inject constructor(
     private val direction: HotNewsContract.Direction
 ):ViewModel(),HotNewsContract.ViewModel {
     init {
-        repository.getAllHotNews().onEach {
+        repository.getHotNews().onEach {
             it.onSuccess {
                 intent { reduce { state.copy(hotNews = it) }}
             }.onSuccess {

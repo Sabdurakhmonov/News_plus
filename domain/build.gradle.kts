@@ -38,7 +38,7 @@ dependencies {
     implementation(libs.androidx.core.ktx)
 
     //hilt
-    implementation("com.google.dagger:hilt-android:2.51")
-    kapt("com.google.dagger:hilt-compiler:2.51")
-    implementation("androidx.hilt:hilt-work:1.0.0")
+    implementation(libs.hilt.android.v251)
+    kapt(libs.hilt.compiler.v251)
+    implementation(libs.androidx.hilt.work.v100)
 }

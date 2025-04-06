@@ -8,8 +8,6 @@ import kotlinx.coroutines.flow.onEach
 import org.orbitmvi.orbit.syntax.simple.intent
 import org.orbitmvi.orbit.syntax.simple.reduce
 import org.orbitmvi.orbit.viewmodel.container
-import uz.assh_abdurakhmonov.newsplus.data.CategoryData
-import uz.abdurakhmonov.domain.repository.NewsRepository
 import javax.inject.Inject
 
 @HiltViewModel
@@ -19,30 +17,41 @@ class MenuViewModel @Inject constructor(
 ):ViewModel(),MenuContract.ViewModel {
 
     init{
-        repository.getAllNews().onEach {
-            it.onSuccess {pair->
-                intent { reduce { state.copy(allNewsList = pair.first, hotNewsList = pair.second) } }
-            }.onFailure {
+        intent {
+            repository.getAllNews().onEach {
+                it.onSuccess {news->
+                   reduce { state.copy(allNewsList = news) }
+                }
+            }.launchIn(viewModelScope)
 
-            }
-        }.launchIn(viewModelScope)
+            repository.getHotNews().onEach {
+                it.onSuccess {
+                    reduce { state.copy(hotNewsList = it) }
+                }
+            }.launchIn(viewModelScope)
+        }
+
     }
 
     override fun onEventDispatchers(intent: MenuContract.Intent) = intent {
         when(intent){
             is MenuContract.Intent.ClickCategory->{
                 if(intent.category!="All news"){
-                    repository.getNewsByCategory(CategoryData(category = intent.category)).onEach {
+                    repository.getNewsByCategory(intent.category).onEach {
                         it.onSuccess {
                             reduce { state.copy(allNewsList = it.subList(20,it.size-1), hotNewsList = it.subList(0,20)) }
                         }
                     }.launchIn(viewModelScope)
                 }else{
                     repository.getAllNews().onEach {
-                        it.onSuccess {pair->
-                            intent { reduce { state.copy(allNewsList = pair.first, hotNewsList = pair.second) } }
-                        }.onFailure {
+                        it.onSuccess {news->
+                            reduce { state.copy(allNewsList = news) }
+                        }
+                    }.launchIn(viewModelScope)
 
+                    repository.getHotNews().onEach {
+                        it.onSuccess {
+                            reduce { state.copy(hotNewsList = it) }
                         }
                     }.launchIn(viewModelScope)
                 }
