@@ -9,11 +9,12 @@ import org.orbitmvi.orbit.syntax.simple.intent
 import org.orbitmvi.orbit.syntax.simple.reduce
 import org.orbitmvi.orbit.viewmodel.container
 import uz.abdurakhmonov.domain.repository.NewsRepository
+import uz.abdurakhmonov.domain.use_case.GetNewsByQueryUseCase
 import javax.inject.Inject
 
 @HiltViewModel
 class SearchViewModel @Inject constructor(
-    private val repository: uz.abdurakhmonov.domain.repository.NewsRepository,
+    private val getNewsByQueryUseCase: GetNewsByQueryUseCase,
     private val direction: SearchContract.Direction
 ):ViewModel(),SearchContract.ViewModel {
     override fun onEventDispatcher(intent: SearchContract.Intent) = intent {
@@ -22,7 +23,7 @@ class SearchViewModel @Inject constructor(
                 direction.nextToInfo(intent.data.url?:"")
             }
             is SearchContract.Intent.ClickSearch->{
-                repository.getNewsByQuery(intent.query).onEach {
+                getNewsByQueryUseCase.invoke(intent.query).onEach {
                     it.onSuccess {
                         reduce { state.copy(list = it) }
                     }

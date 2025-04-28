@@ -12,7 +12,6 @@ import cafe.adriel.voyager.core.screen.Screen
 
 
 import cafe.adriel.voyager.hilt.getViewModel
-import uz.abdurakhmonov.data.remote.network.response.Articles
 data class PostScreen(val data: String) : Screen {
 
     @Composable

@@ -8,15 +8,16 @@ import kotlinx.coroutines.flow.onEach
 import org.orbitmvi.orbit.syntax.simple.intent
 import org.orbitmvi.orbit.syntax.simple.reduce
 import org.orbitmvi.orbit.viewmodel.container
+import uz.abdurakhmonov.domain.use_case.GetHotNewsUseCase
 import javax.inject.Inject
 
 @HiltViewModel
 class HotNewsViewModel @Inject constructor(
-    private val repository: uz.abdurakhmonov.domain.repository.NewsRepository,
+    private val getHotNewsUseCase: GetHotNewsUseCase,
     private val direction: HotNewsContract.Direction
 ):ViewModel(),HotNewsContract.ViewModel {
     init {
-        repository.getHotNews().onEach {
+       getHotNewsUseCase.invoke().onEach {
             it.onSuccess {
                 intent { reduce { state.copy(hotNews = it) }}
             }.onSuccess {

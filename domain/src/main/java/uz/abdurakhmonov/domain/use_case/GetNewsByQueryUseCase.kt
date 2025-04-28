@@ -3,17 +3,16 @@ package uz.abdurakhmonov.domain.use_case
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.map
 import uz.abdurakhmonov.domain.model.NewsData
 import uz.abdurakhmonov.data.repository.NewsRepository
 import uz.abdurakhmonov.domain.utils.toDomain
 import javax.inject.Inject
 
-class GetAllNewsUseCase @Inject constructor(
+class GetNewsByQueryUseCase @Inject constructor(
     private val newsRepository: NewsRepository
 ) {
-    operator fun invoke():Flow<Result<List<NewsData>>> = flow {
-        newsRepository.getAllNews().collectLatest {
+    operator fun invoke(query: String): Flow<Result<List<NewsData>>> = flow {
+        newsRepository.getNewsByQuery(query).collectLatest {
             it.onSuccess {
                 emit(Result.success(it.map { it.toDomain() }))
             }.onFailure {

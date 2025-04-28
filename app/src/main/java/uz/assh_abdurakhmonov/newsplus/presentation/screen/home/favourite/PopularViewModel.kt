@@ -9,15 +9,16 @@ import org.orbitmvi.orbit.syntax.simple.intent
 import org.orbitmvi.orbit.syntax.simple.reduce
 import org.orbitmvi.orbit.viewmodel.container
 import uz.abdurakhmonov.domain.repository.NewsRepository
+import uz.abdurakhmonov.domain.use_case.GetPopularNewsUseCase
 import javax.inject.Inject
 
 @HiltViewModel
 class PopularViewModel @Inject constructor(
-    private val repository: NewsRepository,
+    private val getPopularNewsUseCase: GetPopularNewsUseCase,
     private val direction: PopularContract.Direction
 ):ViewModel(),PopularContract.ViewModel{
     init {
-        repository.getPopularNews().onEach {
+        getPopularNewsUseCase.invoke().onEach {
             it.onSuccess {list->
                 intent { reduce { state.copy(populars = list) } }
             }

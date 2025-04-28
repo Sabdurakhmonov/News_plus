@@ -72,10 +72,8 @@ dependencies {
     //shimmer
     implementation(libs.compose.shimmer)
 
-    //hilt
-    implementation(libs.hilt.android)
-    kapt(libs.hilt.compiler)
-    implementation(libs.androidx.hilt.work)
+    implementation("com.google.dagger:hilt-android:2.51.1")
+    kapt("com.google.dagger:hilt-android-compiler:2.51.1")
 
     //voyager
     implementation(libs.voyager.navigator)
